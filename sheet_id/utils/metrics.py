@@ -10,4 +10,7 @@ def sparse_accuracy_ignoring_background(y_true, y_pred):
     legal_labels = ~tf.cast(unpacked[0], tf.bool)
     y_true = tf.stack(unpacked[1:], axis=-1)
 
-    return K.sum(tf.to_float(legal_labels & K.equal(K.argmax(y_true, axis=-1), K.argmax(y_pred, axis=-1)))) / K.sum(tf.to_float(legal_labels))
+    if K.sum(tf.to_float(legal_labels)) == 0:
+        return 1
+    else:
+        return K.sum(tf.to_float(legal_labels & K.equal(K.argmax(y_true, axis=-1), K.argmax(y_pred, axis=-1)))) / K.sum(tf.to_float(legal_labels))
