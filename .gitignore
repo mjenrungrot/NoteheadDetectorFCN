@@ -1,3 +1,6 @@
+# Weights file
+*.h5
+
 # Mac OS file
 .DS_Store
 
