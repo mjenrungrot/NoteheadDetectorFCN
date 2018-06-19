@@ -4,5 +4,7 @@
 
 To install,
 ```
+git clone https://github.com/mjenrungrot/SheetIdentification/edit/master/README.md
+cd SheetIdentification
 pip install -e .
 ```
