@@ -14,3 +14,12 @@ def softmax_sparse_crossentropy_ignoring_background(y_true, y_pred):
     cross_entropy_mean = K.mean(cross_entropy)
 
     return cross_entropy_mean
+
+def softmax_sparse_crossentropy(y_true, y_pred):
+    y_pred = K.reshape(y_pred, (-1, K.int_shape(y_pred)[-1]))
+    log_softmax = tf.nn.log_softmax(y_pred)
+    y_true = K.one_hot(tf.to_int32(K.flatten(y_true)), K.int_shape(y_pred)[-1])
+    cross_entropy = -K.sum(y_true * log_softmax, axis=1)
+    cross_entropy_mean = K.mean(cross_entropy)
+
+    return cross_entropy_mean
