@@ -9,10 +9,10 @@ def FCN(input_shape=(500, 500, 1), n_classes=124):
     """
     Return an FCN architecture used for DeepScores semantic segmentation
     """
-    input = Input(shape=input_shape)
+    input_tensor = Input(shape=input_shape)
 
     # Encoder
-    conv2 = Conv2D(filters=64, kernel_size=(3,3), padding='same', activation='relu', name='conv2')(input)
+    conv2 = Conv2D(filters=64, kernel_size=(3,3), padding='same', activation='relu', name='conv2')(input_tensor)
     pool2 = MaxPooling2D(pool_size=(2,2), padding='same', name='pool2')(conv2)
     dropout2 = Dropout(rate=0.15, name='dropout2')(pool2)
 
@@ -66,6 +66,6 @@ def FCN(input_shape=(500, 500, 1), n_classes=124):
     # Final upscaling
     deconv_final = Conv2DTranspose(filters=n_classes, kernel_size=(16,16), strides=(2,2),
                                    padding='same', name='deconv_final')(fuse_4_2)
-    output = BilinearUpSampling2D(target_size=tuple(input.get_shape().as_list()[1:3]), name='output')(deconv_final)
+    output = BilinearUpSampling2D(target_size=tuple(input_tensor.get_shape().as_list()[1:3]), name='output')(deconv_final)
 
-    return Model(inputs=[input], outputs=[output])
+    return Model(inputs=[input_tensor], outputs=[output])

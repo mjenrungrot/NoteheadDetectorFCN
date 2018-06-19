@@ -1,6 +1,5 @@
 import keras.backend as K
 import tensorflow as tf
-from keras.layers import *
 
 def resize_images_bilinear(X, height_factor=1, width_factor=1, target_height=None, target_width=None, data_format='default'):
     '''Resizes the images contained in a 4D tensor of shape
@@ -83,11 +82,10 @@ class BilinearUpSampling2D(Layer):
     def call(self, x, mask=None):
         if self.target_size is not None:
             return resize_images_bilinear(x, target_height=self.target_size[0], target_width=self.target_size[1], data_format=self.data_format)
-        else:
-            return resize_images_bilinear(x, height_factor=self.size[0], width_factor=self.size[1], data_format=self.data_format)
+        
+        return resize_images_bilinear(x, height_factor=self.size[0], width_factor=self.size[1], data_format=self.data_format)
 
     def get_config(self):
         config = {'size': self.size, 'target_size': self.target_size}
         base_config = super(BilinearUpSampling2D, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))
-
