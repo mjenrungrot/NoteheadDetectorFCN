@@ -8,7 +8,7 @@ class DataGenerator(keras.utils.Sequence):
     DataGenerator for keras training
     """
     def __init__(self, list_IDs, labels=None, batch_size=20, dim=(500,500), n_channels=1,
-                 n_classes=124, shuffle=True, crop=True, crop_size=[500,500], load_npy=True):
+                 n_classes=124, shuffle=True, crop=True, crop_size=(500,500), load_npy=True):
         """
         Initialization
         """
@@ -50,7 +50,7 @@ class DataGenerator(keras.utils.Sequence):
         Update indexes after each epoch
         """
         self.indexes = np.arange(len(self.list_IDs))
-        if self.shuffle == True:
+        if self.shuffle:
             np.random.shuffle(self.indexes)
 
     def __data_generation(self, list_IDs_temp):

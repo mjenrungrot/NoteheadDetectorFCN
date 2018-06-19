@@ -14,4 +14,3 @@ def softmax_sparse_crossentropy_ignoring_background(y_true, y_pred):
     cross_entropy_mean = K.mean(cross_entropy)
 
     return cross_entropy_mean
-

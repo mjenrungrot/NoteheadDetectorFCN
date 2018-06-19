@@ -21,3 +21,4 @@ def splitTrainValidation(deepscores_path, max_size=1000, test_size=30, npy_only=
     train_image_list = images_list[test_size:max_size]
 
     return train_image_list, test_image_list
+    

@@ -1,7 +1,7 @@
-
 from tqdm import tqdm
 from multiprocessing import Pool, freeze_support
-import glob, os 
+import glob
+import os 
 import scipy.misc as misc
 import numpy as np
 
