@@ -8,7 +8,7 @@ class DataGenerator(keras.utils.Sequence):
     DataGenerator for keras training
     """
     def __init__(self, list_IDs, labels=None, batch_size=20, dim=(500,500), n_channels=1,
-                 n_classes=124, shuffle=True, crop=True, crop_size=[500,500]):
+                 n_classes=124, shuffle=True, crop=True, crop_size=[500,500], load_npy=True):
         """
         Initialization
         """
@@ -21,6 +21,7 @@ class DataGenerator(keras.utils.Sequence):
         self.shuffle = shuffle
         self.crop = crop
         self.crop_size = crop_size
+        self.load_npy = load_npy
         self.on_epoch_end()
 
     def __len__(self):
@@ -63,8 +64,12 @@ class DataGenerator(keras.utils.Sequence):
 
         # Generate data
         for i, ID in enumerate(list_IDs_temp):
-            img = misc.imread(ID, flatten=True)
-            annotation = misc.imread(ID.replace("/images_png/", "/pix_annotations_png/"))
+            if self.load_npy:
+                img = np.load(ID)
+                annotation = np.load(ID.replace("/images_png/", "/pix_annotations_png/"))
+            else:
+                img = misc.imread(ID, flatten=True)
+                annotation = misc.imread(ID.replace("/images_png/", "/pix_annotations_png/"))
 
             img = np.expand_dims(img, axis=-1)
             annotation = np.expand_dims(annotation, axis=-1)

@@ -14,23 +14,23 @@ def FCN(input_shape=(500, 500, 1), n_classes=124):
     # Encoder
     conv2 = Conv2D(filters=64, kernel_size=(3,3), padding='same', activation='relu', name='conv2')(input)
     pool2 = MaxPooling2D(pool_size=(2,2), padding='same', name='pool2')(conv2)
-    dropout2 = Dropout(rate=0.85, name='dropout2')(pool2)
+    dropout2 = Dropout(rate=0.15, name='dropout2')(pool2)
 
     conv3 = Conv2D(filters=128, kernel_size=(3,3), padding='same', activation='relu', name='conv3')(dropout2)
     pool3 = MaxPooling2D(pool_size=(2,2), padding='same', name='pool3')(conv3)
-    dropout3 = Dropout(rate=0.85, name='dropout3')(pool3)
+    dropout3 = Dropout(rate=0.15, name='dropout3')(pool3)
 
     conv4 = Conv2D(filters=256, kernel_size=(3,3), padding='same', activation='relu', name='conv4')(dropout3)
     pool4 = MaxPooling2D(pool_size=(2,2), padding='same', name='pool4')(conv4)
-    dropout4 = Dropout(rate=0.85, name='dropout4')(pool4)
+    dropout4 = Dropout(rate=0.15, name='dropout4')(pool4)
 
     conv5 = Conv2D(filters=512, kernel_size=(3,3), padding='same', activation='relu', name='conv5')(dropout4)
     pool5 = MaxPooling2D(pool_size=(2,2), padding='same', name='pool5')(conv5)
-    dropout5 = Dropout(rate=0.85, name='dropout5')(pool5)
+    dropout5 = Dropout(rate=0.15, name='dropout5')(pool5)
 
     conv6 = Conv2D(filters=512, kernel_size=(3,3), padding='same', activation='relu', name='conv6')(dropout5)
     pool6 = MaxPooling2D(pool_size=(2,2), padding='same', name='pool6')(conv6)
-    dropout6 = Dropout(rate=0.85, name='dropout6')(pool6)
+    dropout6 = Dropout(rate=0.15, name='dropout6')(pool6)
 
     conv7 = Conv2D(filters=4096, kernel_size=(3,3), padding='same', name='conv7')(dropout6)
 

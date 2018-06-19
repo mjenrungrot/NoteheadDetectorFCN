@@ -13,7 +13,7 @@ def splitTrainValidation(deepscores_path, max_size=1000, test_size=30, npy_only=
     else:
         image_paths = os.path.join(deepscores_path, 'images_png', '*.png')
     images_list.extend(glob.glob(image_paths))
-    print(len(image_paths))
+    
     assert test_size < max_size, "#{Test images} have to be smaller than #{All images}"
     assert max_size <= len(images_list), "Number of images isn't enough"
 
