@@ -5,7 +5,7 @@
 To install,
 ```
 # Install python package
-git clone https://github.com/mjenrungrot/SheetIdentification/edit/master/README.md
+git clone https://github.com/mjenrungrot/SheetIdentification
 cd SheetIdentification
 pip install -e .
 
