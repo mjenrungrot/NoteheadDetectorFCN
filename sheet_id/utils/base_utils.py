@@ -3,6 +3,9 @@ import pkg_resources
 import yaml
 import glob
 import cv2
+import numpy as np
+import pandas as pd
+import math
 
 def loadSettings():
     settingsFilepath = pkg_resources.resource_filename('sheet_id', 'settings.yaml')
@@ -54,8 +57,9 @@ def generateSheetMaskAnnotation(img_path=loadSettings()['SCANNED_ANNOTATION_IMAG
     Generate mask annotations from the bounding box annotations.
 
     Output:
+        output - dictionary of images
     {
-        filename: (image, mask)
+        filename: (image, mask, list of bounding boxes)
     } 
     """
 
@@ -86,12 +90,14 @@ def generateSheetMaskAnnotation(img_path=loadSettings()['SCANNED_ANNOTATION_IMAG
         df_score = df[df['filename'] == filename]
         mask = np.zeros(img.shape)
 
+        boxes = []
         for i, row in df_score.iterrows():
             note_height = math.ceil(row['staff_height'] / 8)
             (start_row, end_row) = (row['vpix'] - note_height, row['vpix'] + note_height)
             (start_col, end_col) = (row['hpix'] - 1, row['hpix'] + note_height)
             threshold = 60
-
+            
+            boxes.append([start_col, start_row, end_col, end_row])
             mask[start_row:end_row, start_col:end_col] = np.where(img[start_row:end_row, start_col:end_col] is not None,
                                                                   29, 0)
             if plot:
@@ -101,6 +107,7 @@ def generateSheetMaskAnnotation(img_path=loadSettings()['SCANNED_ANNOTATION_IMAG
                 plt.subplot(1,2,2)
                 plt.imshow(mask, cmap='gray')
                 plt.show()
-        output[filename] = (img, mask)
+            
+        output[filename] = (img, mask, boxes)
         
     return output
