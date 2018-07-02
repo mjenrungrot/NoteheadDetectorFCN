@@ -4,6 +4,7 @@ import scipy.misc as misc
 from random import shuffle, randint
 import os
 import xml.etree.ElementTree
+from sheet_id.utils.dwd_utils import generateGroundTruthMaps
 
 class DataGenerator(keras.utils.Sequence):
     """
@@ -43,9 +44,13 @@ class DataGenerator(keras.utils.Sequence):
         list_IDs_temp = [self.list_IDs[k] for k in indexes]
 
         # Generate data
-        X, y, boxes = self.__data_generation(list_IDs_temp)
+        X, energy_map, class_map, bbox_map = self.__data_generation(list_IDs_temp)
 
-        return X, y, boxes
+        return X, {
+            'energy_map': np.expand_dims(energy_map, axis=-1),
+            'class_map': np.expand_dims(class_map, axis=-1),
+            'bbox_map': bbox_map,
+        }
 
     def on_epoch_end(self):
         """
@@ -140,4 +145,5 @@ class DataGenerator(keras.utils.Sequence):
             y[i,:] = annotation
             boxes.append(boxes_annotation)
 
-        return X, y, boxes
+        energy_map_quantized, class_map, bbox_map = generateGroundTruthMaps(boxes, y, image_shape=img.shape)
+        return X, energy_map_quantized, class_map, bbox_map

@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 import pandas as pd
 import math
+import matplotlib.pyplot as plt
 
 def loadSettings():
     settingsFilepath = pkg_resources.resource_filename('sheet_id', 'settings.yaml')
