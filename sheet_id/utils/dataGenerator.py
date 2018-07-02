@@ -44,12 +44,13 @@ class DataGenerator(keras.utils.Sequence):
         list_IDs_temp = [self.list_IDs[k] for k in indexes]
 
         # Generate data
-        X, energy_map, class_map, bbox_map = self.__data_generation(list_IDs_temp)
+        X, energy_map, class_map, bbox_map, boxes = self.__data_generation(list_IDs_temp)
 
         return X, {
             'energy_map': np.expand_dims(energy_map, axis=-1),
             'class_map': np.expand_dims(class_map, axis=-1),
             'bbox_map': bbox_map,
+            'boxes': boxes
         }
 
     def on_epoch_end(self):
@@ -146,4 +147,4 @@ class DataGenerator(keras.utils.Sequence):
             boxes.append(boxes_annotation)
 
         energy_map_quantized, class_map, bbox_map = generateGroundTruthMaps(boxes, y, image_shape=img.shape)
-        return X, energy_map_quantized, class_map, bbox_map
+        return X, energy_map_quantized, class_map, bbox_map, boxes
