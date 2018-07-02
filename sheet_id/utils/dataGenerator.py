@@ -97,8 +97,8 @@ class DataGenerator(keras.utils.Sequence):
 
             # Eliminate boxes whose center is outside
             center = ((new_x1+new_x2)/2, (new_y1+new_y2)/2)
-            if center[0] < new_x1 or center[0] >= new_x2: continue
-            if center[1] < new_y1 or center[1] >= new_y2: continue
+            if center[0] < 0 or center[0] >= limits[2] - limits[0]: continue
+            if center[1] < 0 or center[1] >= limits[3] - limits[1]: continue
 
             boxes.append([new_x1, new_y1, new_x2, new_y2])
         
