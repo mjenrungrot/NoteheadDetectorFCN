@@ -231,3 +231,13 @@ def evaluate(gt_boxes, pred_boxes):
         avg_precs.append(data['avg_prec'])
     mAP = np.mean(avg_precs)
     return mAP
+
+def filterBoxes(boxes, classToFilter=['noteheadHalf', 'noteheadBlack']):
+    """
+    Filter a list of boxes based on the provided classes.
+
+    boxes - list of bounding boxes in the format of [x1, y1, x2, y2, className]
+    classToFilter - list of classes (e.g. ['noteheadHalf', 'noteheadBlack'])
+    """
+    return list(map(lambda x: (x[0], x[1], x[2], x[3]),
+                filter(lambda x: x[-1] in classToFilter, boxes)))
