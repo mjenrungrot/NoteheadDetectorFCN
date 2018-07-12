@@ -53,6 +53,7 @@ def calculateMRR(ranks):
 
 def generateSheetMaskAnnotation(img_path=loadSettings()['SCANNED_ANNOTATION_IMAGE_PATH'], 
                                 csv_path=loadSettings()['SCANNED_ANNOTATION_PATH'], 
+                                staff_height=92,
                                 trimmed=True, plot=False):
     """
     Generate mask annotations from the bounding box annotations.
@@ -86,18 +87,26 @@ def generateSheetMaskAnnotation(img_path=loadSettings()['SCANNED_ANNOTATION_IMAG
     output = {}
     for path in img_paths:
         filename = os.path.splitext(os.path.split(path)[1])[0]
+        df_score = df[df['filename'] == filename]
+        
         img = cv2.imread(path, 0)
 
-        df_score = df[df['filename'] == filename]
-        mask = np.zeros(img.shape)
+        staff_height_db = df_score['staff_height'].iloc[0]
+        scaling_factor = staff_height / staff_height_db
+        img = cv2.resize(img, None, fx=scaling_factor, fy=scaling_factor)
 
+        mask = np.zeros(img.shape)
+        
         boxes = []
         for i, row in df_score.iterrows():
-            note_height = math.ceil(row['staff_height'] / 8)
-            (start_row, end_row) = (row['vpix'] - note_height, row['vpix'] + note_height)
-            (start_col, end_col) = (row['hpix'] - 1, row['hpix'] + note_height)
-            threshold = 60
-            
+            note_height = (row['staff_height'] / 8)
+            (start_row, end_row) = (row['vpix'] - 1.2*note_height, row['vpix'] + 1.2*note_height)
+            (start_col, end_col) = (row['hpix'] - 1.3*note_height, row['hpix'] + 1.3*note_height)
+            start_row = int(start_row * scaling_factor)
+            start_col = int(start_col * scaling_factor)
+            end_row = int(end_row * scaling_factor)
+            end_col = int(end_col * scaling_factor)
+
             boxes.append([start_col, start_row, end_col, end_row])
             mask[start_row:end_row, start_col:end_col] = np.where(img[start_row:end_row, start_col:end_col] is not None,
                                                                   29, 0)

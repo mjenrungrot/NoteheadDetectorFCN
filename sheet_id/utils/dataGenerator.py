@@ -44,12 +44,13 @@ class DataGenerator(keras.utils.Sequence):
         list_IDs_temp = [self.list_IDs[k] for k in indexes]
 
         # Generate data
-        X, energy_map, class_map, bbox_map, boxes = self.__data_generation(list_IDs_temp)
+        X, energy_map, class_map, bbox_map, note_map, boxes = self.__data_generation(list_IDs_temp)
 
         return X, {
             'energy_map': np.expand_dims(energy_map, axis=-1),
             'class_map': np.expand_dims(class_map, axis=-1),
             'bbox_map': bbox_map,
+            'note_map': note_map,
             'boxes': boxes
         }
 
@@ -119,6 +120,7 @@ class DataGenerator(keras.utils.Sequence):
         """
         X = np.empty((self.batch_size, *self.dim, self.n_channels))
         y = np.empty((self.batch_size, *self.dim, self.n_channels), dtype=int)
+        note_map = np.empty((self.batch_size, *self.dim, self.n_channels), dtype=int)
         boxes = []
 
         # Generate data
@@ -126,9 +128,11 @@ class DataGenerator(keras.utils.Sequence):
             if self.load_npy:
                 img = np.load(ID)
                 annotation = np.load(ID.replace("/images_png/", "/pix_annotations_png/"))
+                note = np.load(ID.replace("/images_png/", "/pix_annotations_png_new/"))
             else:
                 img = misc.imread(ID, flatten=True)
                 annotation = misc.imread(ID.replace("/images_png/", "/pix_annotations_png/"))
+                note = misc.imread(ID.replace("/images_png/", "/pix_annotations_png_new/"))
 
             img = np.expand_dims(img, axis=-1)
             annotation = np.expand_dims(annotation, axis=-1)
@@ -137,6 +141,7 @@ class DataGenerator(keras.utils.Sequence):
             coord_1 = randint(0, (img.shape[1] - self.crop_size[1]))
             img = img[coord_0:(coord_0+self.crop_size[0]), coord_1:(coord_1+self.crop_size[1])]
             annotation = annotation[coord_0:(coord_0+self.crop_size[0]), coord_1:(coord_1+self.crop_size[1])]
+            note_map[i,:] = np.expand_dims(note[coord_0:(coord_0+self.crop_size[0]), coord_1:(coord_1+self.crop_size[1])], axis=-1) 
 
             # load xml annotation
             xml_path = os.path.splitext(ID.replace('/images_png/', '/xml_annotations/'))[0] + '.xml'
@@ -147,4 +152,4 @@ class DataGenerator(keras.utils.Sequence):
             boxes.append(boxes_annotation)
 
         energy_map_quantized, class_map, bbox_map = generateGroundTruthMaps(boxes, y, image_shape=img.shape)
-        return X, energy_map_quantized, class_map, bbox_map, boxes
+        return X, energy_map_quantized, class_map, bbox_map, note_map, boxes

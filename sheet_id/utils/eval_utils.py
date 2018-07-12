@@ -239,5 +239,4 @@ def filterBoxes(boxes, classToFilter=['noteheadHalf', 'noteheadBlack']):
     boxes - list of bounding boxes in the format of [x1, y1, x2, y2, className]
     classToFilter - list of classes (e.g. ['noteheadHalf', 'noteheadBlack'])
     """
-    return list(map(lambda x: (x[0], x[1], x[2], x[3]),
-                filter(lambda x: x[-1] in classToFilter, boxes)))
+    return list(filter(lambda x: x[4] in classToFilter, boxes))
