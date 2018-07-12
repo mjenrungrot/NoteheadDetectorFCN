@@ -298,7 +298,7 @@ def non_max_suppression_fast(boxes, overlapThresh):
 
     # keep looping while some indexes still remain in the indexes
     # list
-    while not idxs.size:
+    while idxs.size:
         # grab the last index in the indexes list and add the
         # index value to the list of picked indexes
         last = len(idxs) - 1
